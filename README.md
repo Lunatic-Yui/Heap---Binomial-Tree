@@ -476,8 +476,6 @@ Gunakan Binomial Heap ketika:
 ✓ Operasi merge lebih sering dari extract-min.
 ```
 
-#### Trade-off Praktis
-
 Walaupun Binomial Heap memiliki keunggulan teoritis pada operasi merge, Binary Heap sering memberikan performa lebih baik pada implementasi nyata.
 
 Binary Heap menggunakan array contiguous sehingga memiliki locality cache yang tinggi dan lebih sedikit pointer traversal. Hal ini membuat operasi insert dan extract-min sering berjalan lebih cepat pada hardware modern.
