@@ -131,7 +131,9 @@ Kompleksitas: O(1)
 
 ### 2.2 Binomial Heap (Variasi Modifikasi)
 
-Binomial Heap diperkenalkan oleh Jean Vuillemin (1978) sebagai variasi heap yang mendukung operasi **merge/union** secara efisien.
+Binomial Heap diperkenalkan oleh Jean Vuillemin (1978) sebagai variasi heap yang mendukung operasi **merge/union** secara efisien. 
+
+Berbeda dengan Binary Heap yang hanya menggunakan satu complete binary tree, Binomial Heap terdiri dari kumpulan beberapa Binomial Tree dalam bentuk forest (hutan pohon). Struktur ini dirancang agar operasi merge dapat dilakukan secara efisien. Ide dasarnya berasal dari konsep tournament tree, yaitu proses penggabungan elemen secara bertahap seperti sistem turnamen.
 
 #### Binomial Tree
 
@@ -142,6 +144,8 @@ B_0 : Satu node tunggal.
 B_k : Dua B_{k-1} digabung, dengan root salah satunya menjadi anak paling kiri dari root yang lain.
 ```
 
+Binomial Tree dibentuk secara rekursif dengan menggabungkan dua tree yang memiliki degree sama. Karena proses pembentukannya selalu teratur dan seimbang, ukuran setiap Binomial Tree selalu mengikuti pangkat dua.
+
 Properti B_k:
 - Memiliki tepat **2^k node**.
 - Tinggi pohon = **k**.
@@ -149,6 +153,9 @@ Properti B_k:
 - Jumlah node di kedalaman d = C(k, d) (koefisien binomial — asal nama "Binomial").
 
 ```
+
+Koefisien binomial tersebut menjadi asal nama “Binomial Tree”, karena distribusi jumlah node pada setiap level mengikuti pola segitiga Pascal.
+
 B_0:  •        (1 node)
 B_1:  •         (2 node)
       |
@@ -174,10 +181,13 @@ Binomial Heap adalah **koleksi (hutan) dari Binomial Trees** di mana:
 - **Paling banyak satu** Binomial Tree untuk setiap derajat.
 - Jumlah node n terhubung dengan representasi biner dari n.
 
+Representasi biner ini menjadi dasar efisiensi operasi merge pada Binomial Heap.
 Contoh: Binomial Heap dengan 13 node (13 = 1101₂):
 ```
 Terdiri dari: B_3 (8 node) + B_2 (4 node) + B_0 (1 node)
 ```
+
+Ketika dua tree dengan degree sama muncul, keduanya akan digabung seperti proses carry pada penjumlahan biner.
 
 #### Algoritma Operasi Binomial Heap
 
@@ -445,6 +455,9 @@ Hasil: Heap baru dengan B_3 + B_1 (10 node) ✓
 | **Cache performance** | Sangat baik (array contiguous) | Kurang baik (pointer-based) |
 | **Kemudahan implementasi** | Sederhana | Kompleks |
 | **Merge support** | Tidak efisien | Efisien (alasan utama dibuat) |
+| **Prinsip organisasi** |	Berdasarkan posisi array |	Berdasarkan representasi biner jumlah node |
+|**Kemampuan meldable heap** |	Lemah |	Sangat kuat |
+|**Kemiripan operasi**|	Heapify	| Binary addition (carry propagation) |
 
 ### 7.3 Kapan Menggunakan Masing-masing?
 
@@ -462,6 +475,14 @@ Gunakan Binomial Heap ketika:
 ✓ Insert amortized O(1) penting untuk kinerja agregat.
 ✓ Operasi merge lebih sering dari extract-min.
 ```
+
+#### Trade-off Praktis
+
+Walaupun Binomial Heap memiliki keunggulan teoritis pada operasi merge, Binary Heap sering memberikan performa lebih baik pada implementasi nyata.
+
+Binary Heap menggunakan array contiguous sehingga memiliki locality cache yang tinggi dan lebih sedikit pointer traversal. Hal ini membuat operasi insert dan extract-min sering berjalan lebih cepat pada hardware modern.
+
+Sebaliknya, Binomial Heap menggunakan struktur pointer-based yang lebih fleksibel untuk merge, tetapi dapat menyebabkan cache miss lebih sering dibandingkan Binary Heap.
 
 ---
 
@@ -527,6 +548,8 @@ Merge = seperti penjumlahan biner:
   Total: O(log n).
 ```
 
+Secara konseptual, operasi merge pada Binomial Heap bekerja mirip seperti proses penjumlahan bilangan biner. Setiap Binomial Tree merepresentasikan satu bit dalam representasi biner jumlah node. Ketika terdapat dua tree dengan degree yang sama, keduanya akan di-link dan menghasilkan carry ke degree berikutnya. jumlah degree maksimum hanya sebesar log₂ n, maka keseluruhan proses merge dapat diselesaikan dalam O(log n).
+
 **Analisis Amortized Insert O(1):**
 ```
 Menggunakan metode potential function:
@@ -539,6 +562,8 @@ Menggunakan metode potential function:
                  = (1 + carry operations) - carry operations
                  = O(1)
 ```
+
+Sebagian besar operasi insert pada Binomial Heap hanya menambahkan satu tree kecil berdegree 0 tanpa memerlukan merge tambahan. Carry hanya muncul ketika terdapat beberapa tree dengan degree yang sama, mirip seperti carry pada increment bilangan biner. Karena carry tidak terjadi pada setiap insert, maka biaya rata-rata operasi insert menjadi O(1) secara amortized.
 
 #### Kompleksitas Ruang
 
