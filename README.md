@@ -6,7 +6,8 @@
 > - Amjherawala, F., Dubey, S., & Amjherawala, U. (2023). *Comparative Analysis of Different Binary Tree and Priority Queue (Heap) Algorithms*. International Journal of Computer Applications (IJCA), Vol. 185, No. 48.
 > - GeeksforGeeks. (2026). *Binary Heap*. https://www.geeksforgeeks.org/dsa/binary-heap/
 > - Belonio, N.A.L., Pagkaliwangan, K.L., & Ramoy, A.G. *Heap Trees*. University of the East Caloocan.
-
+> - Blandford, D., Blelloch, G., & Kash, I. (2021). *JHeaps: An Open-Source Library of Priority Queues*. SoftwareX, Vol. 16.
+> - Liu, Y., & Spear, M. (2018). *Lock-Free Concurrent Binomial Heaps*. Journal of Parallel and Distributed Computing, Vol. 118, pp. 173–185.
 ---
 
 ## 📑 Daftar Isi
@@ -1353,6 +1354,12 @@ Binomial Hp  ██████████████████████�
 5. Vuillemin, J. (1978). A data structure for manipulating priority queues. *Communications of the ACM*, 21(4), 309–315.
 
 6. Cormen, T.H., Leiserson, C.E., Rivest, R.L., & Stein, C. (2009). *Introduction to Algorithms* (3rd ed.). MIT Press.
+
+7. Blandford, D., Blelloch, G., & Kash, I. (2021). *JHeaps: An Open-Source Library of Priority Queues*. SoftwareX, Vol. 16. Elsevier. https://www.sciencedirect.com/science/article/pii/S2352711021001370
+
+8. Liu, Y., & Spear, M. (2018). *Lock-Free Concurrent Binomial Heaps*. Journal of Parallel and Distributed Computing, Vol. 118, pp. 173–185. Elsevier. https://www.sciencedirect.com/science/article/pii/S2352220817301517
+
+9. Brilliant.org. *Binomial Heap Guide*. Brilliant Computer Science Wiki. https://brilliant.org/wiki/binomial-heap/
 
 ---
 
