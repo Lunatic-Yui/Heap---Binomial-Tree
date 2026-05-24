@@ -30,7 +30,7 @@
 
 ### Latar Belakang
 
-Dalam ilmu komputer, banyak permasalahan membutuhkan akses cepat ke elemen dengan **prioritas tertinggi atau terendah** dari sekumpulan data yang terus berubah secara dinamis. Contoh kasus nyata meliputi:
+Dalam ilmu komputer, terdapat berbagai permasalahan yang membutuhkan pengelolaan data berdasarkan prioritas, yaitu akses cepat ke elemen dengan **prioritas tertinggi atau terendah** dari sekumpulan data yang terus berubah secara efisien. Contoh kasus nyata meliputi:
 
 - **Penjadwalan proses OS** — sistem operasi harus selalu menjalankan proses dengan prioritas tertinggi terlebih dahulu.
 - **Algoritma pathfinding (Dijkstra, A\*)** — selalu membutuhkan node dengan biaya terkecil berikutnya.
@@ -57,7 +57,9 @@ Selain itu, muncul permasalahan lanjutan: bagaimana jika perlu **menggabungkan (
 
 ### 2.1 Binary Heap (Tree Dasar)
 
-Binary Heap adalah struktur data berbasis **Complete Binary Tree** yang memenuhi **heap property**. Diperkenalkan oleh J.W.J. Williams pada tahun 1964 dalam algoritma Heapsort.
+Binary Heap adalah struktur data berbasis **Complete Binary Tree** yang memenuhi **heap property**, yaitu setiap parent node memiliki nilai lebih kecil atau sama (min-heap) atau lebih besar atau sama (max-heap) dibandingkan child node-nya. 
+
+Binary Heap pertama kali diperkenalkan oleh J. W. J. Williams (1964) melalui algoritma Heapsort.
 
 #### Properti Utama
 
