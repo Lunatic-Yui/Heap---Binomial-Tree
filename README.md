@@ -1,4 +1,11 @@
-# Laporan Analisis Komprehensif: Binary Heap Tree sebagai Basis Struktural dan Modifikasi Arsitektural pada Binomial Heap Tree
+# Laporan Analisis: Binary Heap Tree sebagai Basis Struktural dan Modifikasi Arsitektural pada Binomial Heap Tree
+
+> Kelompok 9
+> - Yovi Prayudya Rizky Ramadhani 5027251107
+> - Putu Putra Sakti Sadhana 5027251101
+> - Naila Anggun Eka Rizqy 5027251122
+> - Maitasya Rohmatul Ula 5027251026
+> - Salsabila Rafa Syafira 5027251059
 
 ## Daftar Isi
 
@@ -808,109 +815,245 @@ Keduanya berjalan dalam O(log n).
 Menghapus elemen di tengah tree dilakukan secara cerdik: nilai elemen diubah menjadi sangat kecil (`Integer.MIN_VALUE`) menggunakan `decrease()`, sehingga elemen tersebut langsung melesat ke posisi root. Setelah di root, fungsi `extractMin()` dipanggil untuk membuangnya.
 
 ```java
-/* 
-    For the references: geekforgeeks (https://www.geeksforgeeks.org/dsa/binary-heap/)
-    Another references: https://www.andrew.cmu.edu/course/15-121/lectures/Binary%20Heaps/heaps.html
-*/
+import java.util.Arrays;
 
-import java.util.*;
+public class BinaryMinHeap {
 
-class min_heap{
-    private int[] heapArray;
-    private int capacity;
-    private int size;
+    private int[] heap;     // array penyimpan elemen heap
+    private int size;       // jumlah elemen yang aktif di dalam heap
+    private int capacity;   // batas maksimum elemen yang bisa ditampung
 
-    public min_heap(int n) {
-        capacity = n;
-        heapArray = new int[capacity];
-        size = 0;
+    // Konstruktor: siapkan array kosong sebesar kapasitas yang diminta
+    public BinaryMinHeap(int capacity) {
+        this.capacity = capacity;      // simpan kapasitas maksimum
+        this.size = 0;                 // heap mulai kosong
+        this.heap = new int[capacity]; // alokasi array sejumlah kapasitas
     }
 
-    // swapping position from a -> b
-    private void swap(int[] arr, int a, int b) {
-        int temp = arr[a];
-        arr[a] = arr[b];
-        arr[b] = temp;
+    // ==================== UTILITY ====================
+
+    // Rumus indeks parent: setiap node i, parentnya ada di (i-1)/2
+    private int parent(int i) { return (i - 1) / 2; }
+
+    // Rumus indeks anak kiri: selalu di posisi (2*i + 1)
+    private int leftChild(int i) { return (2 * i) + 1; }
+
+    // Rumus indeks anak kanan: selalu di posisi (2*i + 2)
+    private int rightChild(int i) { return (2 * i) + 2; }
+
+    // Tukar nilai dua elemen di indeks i dan j menggunakan variabel temp
+    private void swap(int i, int j) {
+        int temp = heap[i]; // simpan sementara nilai di i
+        heap[i] = heap[j];  // isi i dengan nilai j
+        heap[j] = temp;     // isi j dengan nilai i yang disimpan tadi
     }
 
-    //setting up for parent and left and right position;
-    private int parent(int key) { return (key - 1) / 2; }
-    private int left(int key) { return 2 * key + 1; }
-    private int right(int key) { return 2 * key + 2; }
+    // Insert elemen baru ke heap: O(log n)
+    public void insert(int key) {
+        if (size >= capacity) {         // cek apakah array sudah penuh
+            System.out.println("Heap penuh!");
+            return;
+        }
+        heap[size] = key;               // taruh elemen baru di posisi paling akhir array
+        size++;                         // naikkan jumlah elemen aktif
+        siftUp(size - 1);               // perbaiki posisi elemen baru dengan naik ke atas
+    }
 
-    private void min_heapify(int key) {
-        int l = left(key);
-        int r = right(key);
-
-        int small = key;
-
-        if (l < size && heapArray[l] < heapArray[small]) small = l; 
-        if ( r < size && heapArray[r] < heapArray[small]) small = r;
-
-        if(small != key) {
-            swap(heapArray, key, small);
-            min_heapify(small);
+    // SiftUp: naikkan elemen di indeks i sampai heap property terpenuhi
+    private void siftUp(int i) {
+        // terus naik selama belum di root DAN nilai parent lebih besar (melanggar min-heap)
+        while (i > 0 && heap[parent(i)] > heap[i]) {
+            swap(i, parent(i)); // tukar elemen dengan parentnya
+            i = parent(i);      // pindah ke posisi parent, lanjut cek ke atas
         }
     }
 
-    public int getMin() { return heapArray[0]; } 
-
-    public boolean insert_key(int key) {
-        if (size == capacity) return false;
-
-        int i = size;
-        heapArray[i] = key;
-        size++;
-
-        while (i != 0 && heapArray[i] < heapArray[parent(i)]) {
-            swap(heapArray, i, parent(i));
-            i = parent(i);
-        }
-        return true;
-    }
-
-    public void increase(int key, int new_val) {
-        heapArray[key] = new_val;
-        min_heapify(key);
-    }
-    public void decrease(int key, int new_val) {
-        heapArray[key] = new_val;
-        while(key != 0 && heapArray[key] < heapArray[parent(key)]) {
-            swap(heapArray, key, parent(key));
-            key = parent(key);
-        }
-    }
-
-    public void delete(int key) {
-        decrease(key, Integer.MIN_VALUE);
-        extractMin();
-    }
-
+    // Ambil dan hapus elemen minimum (root) : O(log n)
     public int extractMin() {
-        if (size <= 0) return Integer.MAX_VALUE;
-
-        if( size == 1) {
-            size--;
-            return getMin();
+        if (size <= 0) throw new RuntimeException("Heap kosong!");
+        if (size == 1) {        // kasus khusus: hanya ada 1 elemen
+            size--;             // kurangi size
+            return heap[0];     // langsung kembalikan satu-satunya elemen
         }
-
-        int root = heapArray[0];
-        heapArray[0] = heapArray[size - 1];
-        size--;
-        min_heapify(0);
-
-        return root;
+        int min = heap[0];          // simpan nilai root (nilai minimum)
+        heap[0] = heap[size - 1];   // pindahkan elemen terakhir ke posisi root
+        size--;                     // kurangi ukuran heap (hapus elemen terakhir)
+        siftDown(0);                // turunkan root baru ke posisi yang tepat
+        return min;                 // kembalikan nilai minimum yang disimpan tadi
     }
 
-    public void change_val(int key, int new_val) {
-        if (heapArray[key] == new_val) return;
-        if (heapArray[key] < new_val) {
-            increase(key, new_val);
-        } else {
-            decrease(key, new_val);
+    // SiftDown: turunkan elemen di indeks i sampai heap property terpenuhi
+    private void siftDown(int i) {
+        int smallest = i;           // asumsikan posisi i adalah yang terkecil
+        int left  = leftChild(i);   // hitung indeks anak kiri
+        int right = rightChild(i);  // hitung indeks anak kanan
+
+        // jika anak kiri ada dan lebih kecil dari smallest, update smallest
+        if (left < size && heap[left] < heap[smallest])
+            smallest = left;
+
+        // jika anak kanan ada dan lebih kecil dari smallest, update smallest
+        if (right < size && heap[right] < heap[smallest])
+            smallest = right;
+
+        // jika smallest bukan i, berarti ada anak yang lebih kecil → tukar
+        if (smallest != i) {
+            swap(i, smallest);  // tukar elemen dengan anak yang lebih kecil
+            siftDown(smallest); // rekursif turunkan elemen ke bawah sampai sesuai
         }
+        // jika smallest == i, posisi sudah benar → berhenti
     }
 
+    // Lihat elemen minimum tanpa menghapus : O(1)
+    public int peek() {
+        if (size <= 0) throw new RuntimeException("Heap kosong!");
+        return heap[0]; // root selalu merupakan nilai minimum di min-heap
+    }
+
+    // Bangun heap dari array sembarang : O(n) 
+    public static BinaryMinHeap buildHeap(int[] arr) {
+        BinaryMinHeap h = new BinaryMinHeap(arr.length); // buat heap baru
+        h.heap = Arrays.copyOf(arr, arr.length);         // salin semua elemen array
+        h.size = arr.length;                             // set ukuran = panjang array
+
+        // mulai siftDown dari node non-leaf terakhir (indeks size/2 - 1) menuju root
+        // node di indeks size/2 ke atas adalah leaf, tidak perlu di-siftDown
+        for (int i = h.size / 2 - 1; i >= 0; i--) {
+            h.siftDown(i); // perbaiki heap property dari bawah ke atas
+        }
+        return h; // kembalikan heap yang sudah terbentuk
+    }
+
+    // Hapus elemen di indeks i : O(log n)
+    public void delete(int i) {
+        if (i >= size) throw new IndexOutOfBoundsException(); // validasi indeks
+        decreaseKey(i, Integer.MIN_VALUE); // kecilkan nilai ke -∞ agar naik ke root
+        extractMin();                      // hapus root (yang sekarang berisi -∞)
+    }
+
+    // Kurangi nilai kunci di indeks i menjadi newVal : O(log n)
+    public void decreaseKey(int i, int newVal) {
+        // nilai baru harus lebih kecil, kalau tidak, operasi tidak valid
+        if (newVal > heap[i])
+            throw new IllegalArgumentException("Nilai baru harus lebih kecil!");
+        heap[i] = newVal; // ganti nilai di indeks i dengan nilai baru
+        siftUp(i);        // naikkan elemen karena nilainya mengecil (mungkin melanggar heap)
+    }
+
+    // Urutkan array menggunakan heap (ascending) : O(n log n)
+    public static int[] heapSort(int[] arr) {
+        BinaryMinHeap h = buildHeap(arr);       // bangun heap dari array input
+        int[] sorted = new int[arr.length];     // array hasil urutan
+        for (int i = 0; i < sorted.length; i++) {
+            sorted[i] = h.extractMin();         // ambil min satu per satu → otomatis terurut
+        }
+        return sorted; // kembalikan array yang sudah terurut ascending
+    }
+
+    // Cari indeks pertama yang nilainya sama dengan key : O(n)
+    // heap tidak mendukung pencarian cepat
+    public int search(int key) {
+        for (int i = 0; i < size; i++) { // scan linear seluruh elemen aktif
+            if (heap[i] == key) return i; // kembalikan indeks jika ketemu
+        }
+        return -1; // kembalikan -1 jika tidak ditemukan
+    }
+
+    //Tampilkan struktur heap sebagai tree di console.
+    public void printTree() {
+        if (size == 0) {                
+            System.out.println("(Heap kosong)");
+            return;
+        }
+        printTree(0, "", true); // mulai dari root (indeks 0)
+    }
+
+    // Rekursif: cetak subtree dengan indentasi agar terlihat seperti tree
+    private void printTree(int i, String prefix, boolean isLeft) {
+        if (i >= size) return; // indeks melebihi ukuran → node tidak ada, berhenti
+
+        // cetak anak kanan lebih dulu (ditampilkan di atas dalam rotasi 90°)
+        printTree(rightChild(i), prefix + (isLeft ? "│   " : "    "), false);
+
+        // cetak node saat ini dengan garis penghubung
+        System.out.println(prefix + (isLeft ? "└── " : "┌── ") + heap[i]);
+
+        // cetak anak kiri setelahnya (ditampilkan di bawah)
+        printTree(leftChild(i), prefix + (isLeft ? "    " : "│   "), true);
+    }
+
+    // getter & helper
+    public int getSize()    { return size; }             // kembalikan jumlah elemen aktif
+    public boolean isEmpty(){ return size == 0; }        // true jika heap kosong
+
+    @Override
+    public String toString() {
+        // tampilkan isi heap sebagai array (hanya elemen aktif, bukan seluruh kapasitas)
+        return "BinaryMinHeap" + Arrays.toString(Arrays.copyOf(heap, size));
+    }
+
+    // ==================== MAIN ====================
+    public static void main(String[] args) {
+        System.out.println("===== BINARY MIN-HEAP DEMO =====\n");
+
+        BinaryMinHeap heap = new BinaryMinHeap(20);
+
+        // --- INSERT ---
+        int[] values = {15, 10, 8, 25, 3, 18, 6, 30};
+        System.out.print("Insert: ");
+        for (int v : values) {
+            System.out.print(v + " ");
+            heap.insert(v);
+        }
+        System.out.println("\nArray : " + heap);
+
+        // --- VISUALISASI TREE ---
+        System.out.println("\nStruktur Tree:");
+        heap.printTree();
+
+        // --- PEEK ---
+        System.out.println("\nPeek (min): " + heap.peek());
+
+        // --- SEARCH ---
+        int target = 18;
+        int idx = heap.search(target);
+        System.out.println("Search " + target + ": indeks " + (idx != -1 ? idx : "tidak ditemukan"));
+
+        // --- DECREASE KEY ---
+        System.out.println("\nDecreaseKey indeks 3 → nilai 1:");
+        heap.decreaseKey(3, 1);
+        System.out.println("Array : " + heap);
+        System.out.println("Tree setelah decreaseKey:");
+        heap.printTree();
+
+        // --- DELETE ---
+        System.out.println("\nDelete indeks 2:");
+        heap.delete(2);
+        System.out.println("Array : " + heap);
+
+        // --- EXTRACT MIN ---
+        System.out.print("\nExtract Min (urut): ");
+        BinaryMinHeap heapCopy = new BinaryMinHeap(20);
+        for (int v : values) heapCopy.insert(v);
+        while (!heapCopy.isEmpty()) {
+            System.out.print(heapCopy.extractMin() + " ");
+        }
+        System.out.println("← sorted!");
+
+        // --- BUILD HEAP ---
+        int[] arr = {40, 20, 30, 10, 5, 50, 25};
+        BinaryMinHeap built = BinaryMinHeap.buildHeap(arr);
+        System.out.println("\nBuild Heap dari " + Arrays.toString(arr));
+        System.out.println("Hasil : " + built);
+        System.out.println("Tree  :");
+        built.printTree();
+
+        // --- HEAP SORT ---
+        int[] toSort = {40, 20, 30, 10, 5, 50, 25};
+        int[] sorted = BinaryMinHeap.heapSort(toSort);
+        System.out.println("\nHeap Sort dari " + Arrays.toString(toSort));
+        System.out.println("Hasil : " + Arrays.toString(sorted));
+    }
 }
 ```
 
