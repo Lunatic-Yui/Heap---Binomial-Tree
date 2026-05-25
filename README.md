@@ -715,15 +715,15 @@ Pengembangan struktur data heap tidak berhenti di Binary Heap atau Binomial Heap
 ```
 Binary Heap (1964, Williams)
       ↓
-Binomial Heap (1978, Vuillemin) — mendukung merge O(log n)
+Binomial Heap (1978, Vuillemin) : mendukung merge O(log n)
       ↓
-Fibonacci Heap (1984, Fredman & Tarjan) — decrease-key O(1) amortized
+Fibonacci Heap (1984, Fredman & Tarjan) : decrease-key O(1) amortized
       ↓
-Brodal Queue (1996) — semua operasi optimal worst-case
+Brodal Queue (1996) : semua operasi optimal worst-case
       ↓
-Strict Fibonacci Heap (2012) — Fibonacci worst-case
+Strict Fibonacci Heap (2012) : Fibonacci worst-case
       ↓
-Hollow Heap (2017) — lazy deletion yang optimal
+Hollow Heap (2017) : lazy deletion yang optimal
 ```
 
 ### 9.2 Arah Pengembangan Kontemporer
@@ -764,183 +764,139 @@ Pada level implementasi, perbedaan antara Binary Heap dan Binomial Heap terasa s
 
 ### 10.1 Implementasi Binary Heap (Min-Heap)
 
-Binary Heap tidak menggunakan objek node, melainkan diimplementasikan seluruhnya menggunakan **array**. Insert cukup menambahkan elemen di akhir array, lalu memanggil `siftUp` untuk memulihkan heap property.
+Binary Heap tidak menggunakan objek node, melainkan diimplementasikan seluruhnya menggunakan **array**. Seperti dijelaskan di Bagian 2.1 laporan, relasi parent-child dihitung langsung dari indeks array tanpa pointer tambahan, dan inilah yang membuat Binary Heap sangat *cache-friendly* (Bagian 5.1 laporan).
+
+Berikut adalah implementasi aktual dari file `script/binary.java`:
+
+#### Penjelasan Bagian-bagian Kode
+
+**Struktur data dan relasi indeks**
+Tiga helper method (`parent`, `left`, `right`) mengimplementasikan formula aljabar dari Bagian 2.1 laporan:
+- `parent(key) = (key - 1) / 2`
+- `left(key) = 2 * key + 1`
+- `right(key) = 2 * key + 2`
+
+Ini adalah inti dari *Implicit Heap*: seluruh struktur pohon direpresentasikan lewat aritmatika indeks, bukan pointer (Bagian 7.2 laporan, baris "Representasi Alokasi Memori").
+
+**Insert (`insert_key`)**
+Sesuai algoritma di Bagian 2.1 laporan: elemen baru ditaruh di akhir array (`heapArray[size] = key`), lalu dibandingkan dengan parent-nya menggunakan perulangan `while`. Jika melanggar heap property (parent > child pada min-heap), keduanya ditukar. Proses berlanjut ke atas hingga posisi benar atau mencapai root. Kompleksitas O(log n) (Bagian 8.1 laporan).
+
+**Extract Min (`extractMin`) dan Sift Down (`min_heapify`)**
+Root (nilai minimum) disimpan, lalu diganti dengan elemen terakhir. Elemen pengganti kemudian "digelindingkan ke bawah" melalui fungsi rekursif `min_heapify`. Fungsi ini membandingkan node dengan child terkecilnya (`l` atau `r`), bertukar tempat sampai heap property pulih. Kompleksitas O(log n) (Bagian 8.1 laporan).
+
+**Ubah Nilai (`change_val`, `increase`, `decrease`)**
+Kode ini memiliki mekanisme modifikasi nilai yang efisien:
+- Jika nilai baru lebih besar (`increase`), properti heap dipulihkan dengan mendorongnya ke bawah (`min_heapify`).
+- Jika nilai baru lebih kecil (`decrease`), properti dipulihkan dengan mendorongnya ke atas (mirip proses insert).
+Keduanya berjalan dalam O(log n).
+
+**Delete (`delete`)**
+Menghapus elemen di tengah tree dilakukan secara cerdik: nilai elemen diubah menjadi sangat kecil (`Integer.MIN_VALUE`) menggunakan `decrease()`, sehingga elemen tersebut langsung melesat ke posisi root. Setelah di root, fungsi `extractMin()` dipanggil untuk membuangnya.
 
 ```java
-import java.util.Arrays;
+/* 
+    For the references: geekforgeeks (https://www.geeksforgeeks.org/dsa/binary-heap/)
+    Another references: https://www.andrew.cmu.edu/course/15-121/lectures/Binary%20Heaps/heaps.html
+*/
 
-/**
- * Implementasi Binary Min-Heap menggunakan array.
- * Referensi: Williams (1964), GeeksforGeeks (2026)
- */
-public class BinaryMinHeap {
-    private int[] heap;
-    private int size;
+import java.util.*;
+
+class min_heap{
+    private int[] heapArray;
     private int capacity;
+    private int size;
 
-    public BinaryMinHeap(int capacity) {
-        this.capacity = capacity;
-        this.size = 0;
-        this.heap = new int[capacity];
+    public min_heap(int n) {
+        capacity = n;
+        heapArray = new int[capacity];
+        size = 0;
     }
 
-    // Utility: index relationships
-    private int parent(int i) { return (i - 1) / 2; }
-    private int leftChild(int i) { return (2 * i) + 1; }
-    private int rightChild(int i) { return (2 * i) + 2; }
-
-    private void swap(int i, int j) {
-        int temp = heap[i];
-        heap[i] = heap[j];
-        heap[j] = temp;
+    // swapping position from a -> b
+    private void swap(int[] arr, int a, int b) {
+        int temp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = temp;
     }
 
-    // ==================== INSERT ====================
-    /**
-     * Insert elemen baru ke heap.
-     * Kompleksitas: O(log n)
-     */
-    public void insert(int key) {
-        if (size >= capacity) {
-            System.out.println("Heap penuh!");
-            return;
+    //setting up for parent and left and right position;
+    private int parent(int key) { return (key - 1) / 2; }
+    private int left(int key) { return 2 * key + 1; }
+    private int right(int key) { return 2 * key + 2; }
+
+    private void min_heapify(int key) {
+        int l = left(key);
+        int r = right(key);
+
+        int small = key;
+
+        if (l < size && heapArray[l] < heapArray[small]) small = l; 
+        if ( r < size && heapArray[r] < heapArray[small]) small = r;
+
+        if(small != key) {
+            swap(heapArray, key, small);
+            min_heapify(small);
         }
-        heap[size] = key;
-        size++;
-        siftUp(size - 1);
     }
 
-    private void siftUp(int i) {
-        while (i > 0 && heap[parent(i)] > heap[i]) {
-            swap(i, parent(i));
+    public int getMin() { return heapArray[0]; } 
+
+    public boolean insert_key(int key) {
+        if (size == capacity) return false;
+
+        int i = size;
+        heapArray[i] = key;
+        size++;
+
+        while (i != 0 && heapArray[i] < heapArray[parent(i)]) {
+            swap(heapArray, i, parent(i));
             i = parent(i);
         }
+        return true;
     }
 
-    // ==================== EXTRACT MIN ====================
-    /**
-     * Ambil dan hapus elemen minimum (root).
-     * Kompleksitas: O(log n)
-     */
-    public int extractMin() {
-        if (size <= 0) throw new RuntimeException("Heap kosong!");
-        if (size == 1) {
-            size--;
-            return heap[0];
-        }
-        int min = heap[0];
-        heap[0] = heap[size - 1];
-        size--;
-        siftDown(0);
-        return min;
+    public void increase(int key, int new_val) {
+        heapArray[key] = new_val;
+        min_heapify(key);
     }
-
-    private void siftDown(int i) {
-        int smallest = i;
-        int left = leftChild(i);
-        int right = rightChild(i);
-
-        if (left < size && heap[left] < heap[smallest])
-            smallest = left;
-        if (right < size && heap[right] < heap[smallest])
-            smallest = right;
-
-        if (smallest != i) {
-            swap(i, smallest);
-            siftDown(smallest);
+    public void decrease(int key, int new_val) {
+        heapArray[key] = new_val;
+        while(key != 0 && heapArray[key] < heapArray[parent(key)]) {
+            swap(heapArray, key, parent(key));
+            key = parent(key);
         }
     }
 
-    // ==================== PEEK ====================
-    /**
-     * Lihat elemen minimum tanpa menghapus.
-     * Kompleksitas: O(1)
-     */
-    public int peek() {
-        if (size <= 0) throw new RuntimeException("Heap kosong!");
-        return heap[0];
-    }
-
-    // ==================== BUILD HEAP ====================
-    /**
-     * Bangun heap dari array sembarang.
-     * Kompleksitas: O(n)
-     */
-    public static BinaryMinHeap buildHeap(int[] arr) {
-        BinaryMinHeap h = new BinaryMinHeap(arr.length);
-        h.heap = Arrays.copyOf(arr, arr.length);
-        h.size = arr.length;
-        // Mulai dari node non-leaf terakhir
-        for (int i = h.size / 2 - 1; i >= 0; i--) {
-            h.siftDown(i);
-        }
-        return h;
-    }
-
-    // ==================== DELETE ====================
-    /**
-     * Hapus elemen di indeks i.
-     * Kompleksitas: O(log n)
-     */
-    public void delete(int i) {
-        if (i >= size) throw new IndexOutOfBoundsException();
-        decreaseKey(i, Integer.MIN_VALUE);
+    public void delete(int key) {
+        decrease(key, Integer.MIN_VALUE);
         extractMin();
     }
 
-    // ==================== DECREASE KEY ====================
-    /**
-     * Kurangi nilai kunci di indeks i.
-     * Kompleksitas: O(log n)
-     */
-    public void decreaseKey(int i, int newVal) {
-        if (newVal > heap[i])
-            throw new IllegalArgumentException("Nilai baru harus lebih kecil!");
-        heap[i] = newVal;
-        siftUp(i);
-    }
+    public int extractMin() {
+        if (size <= 0) return Integer.MAX_VALUE;
 
-    public int getSize() { return size; }
-    public boolean isEmpty() { return size == 0; }
-
-    @Override
-    public String toString() {
-        return "BinaryMinHeap" + Arrays.toString(Arrays.copyOf(heap, size));
-    }
-
-    // ==================== MAIN ====================
-    public static void main(String[] args) {
-        System.out.println("===== BINARY MIN-HEAP DEMO =====\n");
-
-        BinaryMinHeap heap = new BinaryMinHeap(20);
-
-        // Insert
-        int[] values = {15, 10, 8, 25, 3, 18, 6, 30};
-        System.out.print("Insert: ");
-        for (int v : values) {
-            System.out.print(v + " ");
-            heap.insert(v);
+        if( size == 1) {
+            size--;
+            return getMin();
         }
-        System.out.println("\nHeap: " + heap);
 
-        // Peek
-        System.out.println("Peek (min): " + heap.peek());
+        int root = heapArray[0];
+        heapArray[0] = heapArray[size - 1];
+        size--;
+        min_heapify(0);
 
-        // Extract Min
-        System.out.print("\nExtract Min sequence: ");
-        BinaryMinHeap heapCopy = new BinaryMinHeap(20);
-        for (int v : values) heapCopy.insert(v);
-        while (!heapCopy.isEmpty()) {
-            System.out.print(heapCopy.extractMin() + " ");
-        }
-        System.out.println("← sorted!");
-
-        // Build Heap
-        int[] arr = {40, 20, 30, 10, 5, 50, 25};
-        BinaryMinHeap built = BinaryMinHeap.buildHeap(arr);
-        System.out.println("\nBuild Heap dari " + Arrays.toString(arr));
-        System.out.println("Hasil: " + built);
+        return root;
     }
+
+    public void change_val(int key, int new_val) {
+        if (heapArray[key] == new_val) return;
+        if (heapArray[key] < new_val) {
+            increase(key, new_val);
+        } else {
+            decrease(key, new_val);
+        }
+    }
+
 }
 ```
 
@@ -948,9 +904,37 @@ public class BinaryMinHeap {
 
 ### 10.2 Implementasi Binomial Heap (Min-Heap)
 
-Hasil implementasi Binomial Heap membutuhkan perumusan **cetak biru orientasi objek (*object-oriented*)** yang berpusat pada hierarki pointer memori eksplisit. Pola penelusuran Binomial menggunakan representasi **Leftmost-Child, Right-Sibling** — tiap simpul mengikat lima atribut krusial.
+Berbeda dari Binary Heap, Binomial Heap membutuhkan representasi **object-oriented** dengan pointer eksplisit. Setiap node menyimpan referensi ke parent, child terkiri, dan sibling di sebelah kanan, mengikuti pola **Leftmost-Child, Right-Sibling** (lihat Bagian 6.2 laporan tentang overhead pointer ini).
 
-Fungsi penyisipan `insert(key)` pada faktanya menginstruksikan pembuatan satu Binomial Heap mikroskopis (berisikan satu *key*), kemudian memanggil subrutin utama `union`. Langkah eksekusi `union` bekerja sangat presisi dengan melibatkan iterasi tiga kursor identifikasi secara berbarengan untuk menavigasi rantai akar — berfungsi sebagai detektor tabrakan kepemilikan ordo pohon (derajat yang identik).
+Fungsi `insert(key)` bekerja dengan cara membuat Binomial Heap baru berisi satu node, lalu menggabungkannya dengan heap yang ada via `union`. Fungsi `union` sendiri melibatkan tiga kursor (prev, curr, next) untuk mendeteksi dua pohon dengan derajat yang sama, lalu menggabungkannya seperti operasi *carry* pada penjumlahan biner (lihat Bagian 2.2 laporan tentang analogi penjumlahan biner ini).
+
+#### Penjelasan Bagian-bagian Kode
+
+**Struktur Node**
+Kelas `Node` menyimpan lima atribut: `key`, `degree`, `parent`, `child`, dan `sibling`. Ini adalah implementasi langsung dari representasi **Explicit Heap** berbasis pointer yang dibahas di Bagian 7.2 laporan (baris "Representasi Alokasi Memori"). Overhead lima atribut per node inilah yang menyebabkan Binomial Heap kurang efisien dalam penggunaan cache (Bagian 6.2 laporan).
+
+**link(y, z)**
+Menggabungkan dua Binomial Tree berderajat sama dengan menjadikan `y` sebagai anak pertama `z`. Ini adalah operasi dasar yang dianalogikan dengan *carry* pada penjumlahan biner di Bagian 2.2 laporan.
+
+**mergeRootLists(h1, h2)**
+Menggabungkan dua root list dengan urutan derajat ascending. Ini langkah persiapan sebelum proses *carry* dilakukan, seperti menjajarkan dua bilangan biner sebelum dijumlahkan.
+
+**union(other)**
+Ini adalah operasi kunci Binomial Heap (Bagian 5.2 laporan). Tiga kursor `prev`, `curr`, `next` digunakan untuk mendeteksi pasangan pohon berderajat sama di root list. Ada empat kasus yang ditangani:
+- Derajat berbeda: lanjut saja
+- Tiga pohon berderajat sama berturut-turut: tunda (tangani pair berikutnya dulu)
+- Dua pohon berderajat sama, curr lebih kecil: next jadi anak curr
+- Dua pohon berderajat sama, next lebih kecil: curr jadi anak next
+
+Proses ini identik dengan propagasi carry penjumlahan biner yang dibahas di Bagian 2.2 laporan.
+
+**insert(key)**
+Insert dilakukan dengan membuat `BinomialHeap` berisi satu `B_0`, lalu memanggil `union`. Kompleksitas amortized O(1) karena sebagian besar insert tidak memicu carry (Bagian 8.2 laporan, analisis potential function).
+
+**findMin dan extractMin**
+`findMin` menelusuri seluruh root list; karena jumlah pohon maksimal tidak lebih dari ⌊log₂ n⌋ + 1, kompleksitasnya O(log n). Ini berbeda dari Binary Heap yang O(1) karena rootnya hanya satu (Bagian 7.1 laporan).
+
+`extractMin` menemukan root terkecil, menghapusnya dari root list, lalu membalik urutan anak-anaknya (reversed) untuk membentuk Binomial Heap baru, yang kemudian di-union dengan sisa heap. Proses pembalikan diperlukan karena anak-anak tersimpan dalam urutan derajat descending (Bagian 2.2 laporan).
 
 ```java
 /**
@@ -1267,7 +1251,7 @@ Dalam kesimpulan uji lapangan, Binomial Heap didiagnosa tertinggal jauh di belak
 
 Lantas, fenomena fisik apa yang menenggelamkan hegemoni teori logaritmik Binomial Heap? Analisis **memory cache profiling** menggunakan detektor seperti *cachegrind* memaparkan bahwa biang keladi kelemahan struktural adalah **pelacakan referensi silang tak beratur (*Irregular Memory Access Patterns*)**.
 
-Binomial Heap adalah infrastruktur berbasis tautan pointer. Tatkala ia mencoba melakukan rutinitas merge antar-akar pohon atau merekonstruksi sibling, instruksi mikroprosesor diharuskan membaca ruang memori *heap allocation* yang serabutan. Ini memancing malapetaka pengambilan data dari RAM — kondisi yang dikenal sebagai **kegagalan lokalitas (*poor spatial locality*)** — yang menginvasi kapasitas siklus sirkuit dan memicu penalti cache misses kronis pada setiap transaksi pemindahan pohon.
+Binomial Heap berbasis pointer, sehingga ketika melakukan merge atau rekonstruksi sibling, prosesor harus membaca lokasi memori yang tersebar. Kondisi ini mengakibatkan **kegagalan lokalitas (*poor spatial locality*)** yang memicu cache miss kronis pada setiap operasi pemindahan pohon.
 
 Sebagai anti-tesis, arsitektur dasar Binary Heap dengan tata letak *array flat contiguous* memungkinkan teknologi **prefetcher** pada inti CPU beroperasi secara ajaib. Sesaat sebelum algoritma mengeksekusi analisis iteratif *Heapify* atau extractMin, silikon CPU telah meramalkan arah dan mengimpor setumpuk rentetan blok memori ke dalam **Cache Level 1 Data (L1 D-cache)** tanpa harus repot meminta izin RAM.
 
