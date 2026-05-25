@@ -11,16 +11,15 @@
 
 1. [Problem Statement / Permasalahan](#1-problem-statement--permasalahan)
 2. [Penjelasan Struktur Tree dan Algoritma](#2-penjelasan-struktur-tree-dan-algoritma)
-3. [Diagram / Visualisasi](#3-diagram--visualisasi)
-4. [Aplikasi / Implementasi](#4-aplikasi--implementasi)
-5. [Keunggulan](#5-keunggulan)
-6. [Kekurangan](#6-kekurangan)
-7. [Perbandingan Binary Heap dan Binomial Heap Secara Teori](#7-perbandingan-binary-heap-dan-binomial-heap-secara-teori)
-8. [Analisis Kompleksitas](#8-analisis-kompleksitas)
-9. [Potensi Pengembangan ke Depan](#9-potensi-pengembangan-ke-depan)
-10. [Hasil Implementasi (Java)](#10-hasil-implementasi-java)
-11. [Perbandingan Performa Real (Dijkstra & Cache Profiling)](#11-perbandingan-performa-real-dijkstra--cache-profiling)
-12. [Referensi](#12-referensi)
+3. [Aplikasi / Implementasi](#4-aplikasi--implementasi)
+4. [Keunggulan](#5-keunggulan)
+5. [Kekurangan](#6-kekurangan)
+6. [Perbandingan Binary Heap dan Binomial Heap Secara Teori](#7-perbandingan-binary-heap-dan-binomial-heap-secara-teori)
+7. [Analisis Kompleksitas](#8-analisis-kompleksitas)
+8. [Potensi Pengembangan ke Depan](#9-potensi-pengembangan-ke-depan)
+9. [Hasil Implementasi (Java)](#10-hasil-implementasi-java)
+10. [Perbandingan Performa Real (Dijkstra & Cache Profiling)](#11-perbandingan-performa-real-dijkstra--cache-profiling)
+11. [Referensi](#12-referensi)
 
 ---
 ## 1. Problem Statement / Permasalahan
@@ -93,10 +92,10 @@ Keteraturan spasial properti bentuk ini memungkinkan Binary Heap untuk tidak lag
 
 Contoh:
  - Representasi Pohon
-![[Pasted image 20260525121523.png]]
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525121523.png)
 
 - Representasi Array
-![[Pasted image 20260525121557.png]]
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525121557.png)
 
 #### Algoritma Operasi Binary Heap
 
@@ -109,7 +108,7 @@ Contoh:
    - Ulangi hingga posisi benar atau mencapai root.
 Kompleksitas: O(log n)
 ```
-![[Pasted image 20260525124251.png|516]] ![[Pasted image 20260525124316.png|164]]
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525124251.png) ![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525124316.png)
 
 **2. Extract Min/Max (Heappop / Percolate Down)**
 
@@ -124,11 +123,11 @@ Kompleksitas: O(log n)
 Kompleksitas: O(log n)
 ```
 - Sebagai contoh kita menggunakan proses extract min
-![[Pasted image 20260525124507.png]]
-![[Pasted image 20260525124641.png]]
-![[Pasted image 20260525124718.png]]
-![[Pasted image 20260525124737.png|697]]
-![[Pasted image 20260525124827.png]]
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525124507.png)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525124641.png)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525124718.png)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525124737.png)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525124827.png)
 
 **3. Build Heap (Heapify)**
 ```
@@ -137,6 +136,11 @@ Dari array sembarang:
 2. Lakukan heapify down ke setiap node hingga root.
 Kompleksitas: O(n)  ← lebih efisien dari insert satu per satu O(n log n)
 ```
+
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525134223.png)![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525134329.png)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525134438.png)![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525134613.png)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525134646.png)
+
 
 **4. Peek**
 ```
@@ -170,8 +174,8 @@ Properti **B_k**:
 - Root memiliki tepat **k anak**.
 - Jumlah node di kedalaman d = C(k, d), yaitu koefisien binomial, yang menjadi asal nama "Binomial".
 
-![[Pasted image 20260525125159.png]]
-![[Pasted image 20260525125223.png]]
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525125159.png)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525125223.png)
 
 Distribusi jumlah node pada setiap level mengikuti pola **segitiga Pascal**, dan itulah mengapa struktur ini disebut Binomial Tree.
 
@@ -186,7 +190,7 @@ Representasi biner ini menjadi dasar efisiensi operasi merge pada Binomial Heap.
 
 Contoh: Binomial Heap dengan 13 node (13 = 1101₂):
 
-![[Pasted image 20260525125327.png]]
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525125327.png)
 
 ```
 Terdiri dari: B_3 (8 node) + B_2 (4 node) + B_0 (1 node)
@@ -197,14 +201,17 @@ Ketika dua tree dengan degree sama muncul, keduanya akan digabung seperti proses
 #### Algoritma Operasi Binomial Heap
 
 **1. Union/Merge (operasi kunci!)**
+	a. Step 0
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525135545.png)![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525135821.png)
+	b. Step 1
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525140001.png)
+	c. Step 2
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525140027.png)
+	d. Step 3
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525140053.png)
+	e. Step 4
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525140158.png)
 
-<!-- 
-  =========================================
-  PASTE HASIL GAMBAR DARI PROMPT 6 DI SINI
-  (Proses Merge Binomial Heap)
-  =========================================
--->
-![Proses Merge Binomial Heap](#)
 ```
 1. Gabungkan root list dua heap, urutkan berdasarkan derajat.
 2. Sama seperti penjumlahan bilangan biner:
@@ -241,218 +248,6 @@ Kompleksitas: O(log n)
 1. Kurangi nilai node.
 2. Lakukan bubble up sampai heap property terpenuhi.
 Kompleksitas: O(log n)
-```
-
----
-
-## 3. Lampiran: Diagram ASCII Tambahan
-
-
-
-### 3.1 Struktur Binary Heap (Min-Heap)
-
-
-
-```
-Contoh Min-Heap dengan elemen: [3, 5, 8, 10, 9, 12, 15, 20]
-
-Representasi Pohon:
-              3           ← Root (minimum)
-           /     \
-         5         8
-        / \       / \
-      10   9    12   15
-      /
-    20
-
-Representasi Array:
-Index:  [ 0 ][ 1 ][ 2 ][ 3 ][ 4 ][ 5 ][ 6 ][ 7 ]
-Value:  [  3 ][  5 ][  8 ][ 10 ][  9 ][ 12 ][ 15 ][ 20 ]
-
-Relasi indeks:
-  Node 5 (idx=1): parent=arr[0]=3, left=arr[3]=10, right=arr[4]=9
-  Node 8 (idx=2): parent=arr[0]=3, left=arr[5]=12, right=arr[6]=15
-```
-
-### 3.2 Max-Heap dengan Pemetaan Array Implisit
-
-```
-Max-Binary Heap:
-
-Level 0:             100
-                    /   \
-Level 1:          36     19
-                 / \    / \
-Level 2:        25   1 17   3
-               / \
-Level 3:      2   7
-
-Pemetaan Array Implisit:
-Indeks: | 0  | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  |
-Nilai : |100 | 36 | 19 | 25 |  1 | 17 |  3 |  2 |  7 |
-
-Bukti relasi: Node indeks 1 (nilai=36):
-  Left child  → arr[2×1 + 1] = arr[3] = 25  ✓
-  Right child → arr[2×1 + 2] = arr[4] = 1   ✓
-  Parent      → arr[(1-1)/2] = arr[0] = 100 ✓
-```
-
-### 3.3 Proses Insert pada Min-Heap
-
-
-
-```
-Insert nilai 2 ke dalam heap [3, 5, 8, 10, 9, 12, 15, 20]:
-
-Langkah 1: Tambahkan di akhir array
-[3, 5, 8, 10, 9, 12, 15, 20, 2]  ← 2 ada di indeks 8
-
-Langkah 2: Bubble Up
-  Parent(8) = arr[(8-1)/2] = arr[3] = 10
-  2 < 10 → SWAP
-
-[3, 5, 8, 2, 9, 12, 15, 20, 10]
-
-  Parent(3) = arr[(3-1)/2] = arr[1] = 5
-  2 < 5 → SWAP
-
-[3, 2, 8, 5, 9, 12, 15, 20, 10]
-
-  Parent(1) = arr[(1-1)/2] = arr[0] = 3
-  2 < 3 → SWAP
-
-[2, 3, 8, 5, 9, 12, 15, 20, 10]  ✓ Heap property restored
-
-Pohon akhir:
-              2
-           /     \
-         3         8
-        / \       / \
-       5   9    12   15
-      / \
-    20   10
-```
-
-### 3.4 Proses Extract Min
-
-
-
-```
-Extract Min dari [2, 3, 8, 5, 9, 12, 15, 20, 10]:
-
-Langkah 1: Simpan root (2), ganti dengan elemen terakhir
-[10, 3, 8, 5, 9, 12, 15, 20]  ← 10 jadi root sementara
-
-Langkah 2: Heapify Down
-  Node 10 (idx=0): left=arr[1]=3, right=arr[2]=8
-  Min child = 3 (idx=1)
-  10 > 3 → SWAP
-
-[3, 10, 8, 5, 9, 12, 15, 20]
-
-  Node 10 (idx=1): left=arr[3]=5, right=arr[4]=9
-  Min child = 5 (idx=3)
-  10 > 5 → SWAP
-
-[3, 5, 8, 10, 9, 12, 15, 20]  ✓
-
-Hasil: dikembalikan nilai 2, heap sekarang valid.
-```
-
-### 3.5 Pembentukan Binomial Tree (B_0 hingga B_3)
-
-
-
-```
-Ordo 0 (B_0): Hanya 1 Simpul
-  o
-
-Ordo 1 (B_1): 2 Simpul (Gabungan 2 buah B_0)
-  o
-  |
-  o
-
-Ordo 2 (B_2): 4 Simpul (Gabungan 2 buah B_1)
-  o
- /|
-o  o
-|
-o
-
-Ordo 3 (B_3): 8 Simpul (Gabungan 2 buah B_2)
-    o
-  / | \
- o  o  o
-/|  |
-o o  o
-|
-o
-```
-
-### 3.6 Struktur Binomial Heap (13 node)
-
-
-
-```
-13 = 1101₂  →  B_3 + B_2 + B_0
-
-B_3 (8 node, root=1):        B_2 (4 node, root=6):    B_0 (root=12):
-        1                            6                      12
-      / | \                        /   \
-     4  5   2                     9     7
-    /|  |                          |
-   8 3  11                        10
-   |
-  13
-
-Root list (diurutkan): 1 → 6 → 12
-                      (B3) (B2) (B0)
-
-Heap property: setiap parent ≤ children-nya ✓
-```
-
-### 3.7 Proses Merge Binomial Heap
-
-
-
-```
-Merge Heap A (7 node = 111₂) + Heap B (3 node = 011₂)
-
-Heap A: B_2 + B_1 + B_0
-Heap B: B_1 + B_0
-
-Seperti penjumlahan biner:
-    111  (7)
-  + 011  (3)
-  -----
-   1010  (10)  →  B_3 + B_1
-
-Proses:
-  Derajat 0: A_0 + B_0 → merge → B_1 baru (carry)
-  Derajat 1: A_1 + B_1 + carry_B_1 → merge 2 → B_2 baru (carry)
-  Derajat 2: A_2 + carry_B_2 → merge → B_3 baru
-
-Hasil: Heap baru dengan B_3 + B_1 (10 node) ✓
-```
-
-### 3.8 Visualisasi Koleksi Binomial Heap (Linked List Akar)
-
-```
-Apabila sistem menyimpan 13 elemen (13 = 1101₂), sistem membangun
-himpunan 3 pohon dengan akar-akar yang saling tertaut:
-
-(B_0)        (B_2)                  (B_3)
- 12  ──────>  10  ──────────────>   20
-            /    \               /  |  \
-           50     70            40  50  70
-                  |                 |  / \
-                  65               80 85  65
-                                   |
-                                  100
-
-Akar 12 (B_0), 10 (B_2), dan 20 (B_3) saling tertaut
-dalam satu linked list hierarkis. Arah tautan inilah
-yang dijelajahi saat mencari nilai terekstrem secara global.
 ```
 
 ---
@@ -555,25 +350,7 @@ Binomial Heap mengambil pendekatan yang berbeda. Data dipecah ke dalam beberapa 
 
 ### 7.1 Tabel Perbandingan Operasi
 
-<!-- 
-  =========================================
-  PASTE HASIL GAMBAR DARI PROMPT 7 DI SINI
-  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
-  =========================================
--->
-![Perbandingan Tabel Kompleksitas](#)
-
-| Operasi | Binary Heap | Binomial Heap |
-|:---|:---:|:---:|
-| **Find Min/Max** | O(1) | O(log n) |
-| **Insert** | O(log n) | O(log n) worst-case / O(1) amortized |
-| **Extract Min/Max** | O(log n) | O(log n) |
-| **Decrease Key** | O(log n) | O(log n) |
-| **Delete** | O(log n) | O(log n) |
-| **Merge/Union** | **O(n)** | **O(log n)** ← keunggulan utama |
-| **Build Heap** | O(n) | O(n) |
-| **Peek** | O(1) | O(log n) |
-
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525140610.png)
 ### 7.2 Perbandingan Struktural Mendalam
 
 | Parameter Perbandingan | Binary Heap Tree (Struktur Dasar) | Binomial Heap Tree (Modifikasi) |
@@ -589,22 +366,7 @@ Binomial Heap mengambil pendekatan yang berbeda. Data dipecah ke dalam beberapa 
 
 ### 7.3 Kapan Menggunakan Masing-masing?
 
-```
-Gunakan Binary Heap ketika:
-✓ Tidak perlu operasi merge antar heap.
-✓ Prioritas utama adalah find-min yang cepat (O(1)).
-✓ Implementasi sederhana dan cepat dibutuhkan.
-✓ Memory dan cache performance adalah prioritas.
-✓ Digunakan untuk Heapsort.
-✓ Embedded systems atau lingkungan memori terbatas.
-
-Gunakan Binomial Heap ketika:
-✓ Perlu merge/union dua heap secara efisien.
-✓ Sistem terdistribusi atau parallel computing.
-✓ Insert amortized O(1) penting untuk kinerja agregat.
-✓ Operasi merge lebih sering dari extract-min.
-✓ Perlu menggabungkan antrian prioritas dari berbagai sumber.
-```
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525140708.png)
 
 Walaupun Binomial Heap unggul secara teoritis pada operasi merge, Binary Heap sering memberikan performa lebih baik di implementasi nyata, terutama karena cache locality-nya yang lebih baik.
 
@@ -725,27 +487,7 @@ Pengembangan struktur data heap tidak berhenti di Binary Heap atau Binomial Heap
 
 ### 9.1 Garis Waktu Evolusi Struktur Heap
 
-<!-- 
-  =========================================
-  PASTE HASIL GAMBAR DARI PROMPT 9 DI SINI
-  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
-  =========================================
--->
-![Garis Waktu Evolusi Heap](#)
-
-```
-Binary Heap (1964, Williams)
-      ↓
-Binomial Heap (1978, Vuillemin) : mendukung merge O(log n)
-      ↓
-Fibonacci Heap (1984, Fredman & Tarjan) : decrease-key O(1) amortized
-      ↓
-Brodal Queue (1996) : semua operasi optimal worst-case
-      ↓
-Strict Fibonacci Heap (2012) : Fibonacci worst-case
-      ↓
-Hollow Heap (2017) : lazy deletion yang optimal
-```
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525141102.png)
 
 ### 9.2 Arah Pengembangan Kontemporer
 
@@ -1406,13 +1148,7 @@ Dalam kesimpulan uji lapangan, Binomial Heap didiagnosa tertinggal jauh di belak
 
 ### 11.2 Pembedahan Cache Profiling Mikroprosesor
 
-<!-- 
-  =========================================
-  PASTE HASIL GAMBAR DARI PROMPT 8 DI SINI
-  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
-  =========================================
--->
-![Diagram Cache Performance Comparison](#)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525141411.png)
 
 Lantas, fenomena fisik apa yang menenggelamkan hegemoni teori logaritmik Binomial Heap? Analisis **memory cache profiling** menggunakan detektor seperti *cachegrind* memaparkan bahwa biang keladi kelemahan struktural adalah **pelacakan referensi silang tak beratur (*Irregular Memory Access Patterns*)**.
 
@@ -1573,13 +1309,7 @@ public class HeapBenchmark {
 
 ### 11.4 Hasil Benchmark (Estimasi, Java 17, Intel i5)
 
-<!-- 
-  =========================================
-  PASTE HASIL GAMBAR DARI PROMPT 10 DI SINI
-  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
-  =========================================
--->
-![Diagram Hasil Benchmark (Bar Chart)](#)
+![Image](https://raw.githubusercontent.com/Lunatic-Yui/Heap---Binomial-Tree/main/Assets/Pasted%20image%2020260525141434.png)
 
 ```
 ╔══════════════════════════════════════════════════════╗
