@@ -16,7 +16,6 @@
 12. [Referensi](#12-referensi)
 
 ---
-
 ## 1. Problem Statement / Permasalahan
 
 ### 1.1 Latar Belakang
@@ -85,25 +84,12 @@ Binary Heap mengklasifikasikan dirinya ke dalam dua kategori utama:
 
 Keteraturan spasial properti bentuk ini memungkinkan Binary Heap untuk tidak lagi mengandalkan tautan memori eksplisit (pointer), melainkan menggunakan **struktur alokasi array yang implisit**. Semua simpul direkam secara berderet ke dalam blok memori yang berdekatan sesuai urutan penjelajahan pohon dari kiri ke kanan.
 
-```
-Untuk node di indeks i:
-  Parent     → arr[(i-1) / 2]
-  Left Child → arr[(2*i) + 1]
-  Right Child→ arr[(2*i) + 2]
-```
-
 Contoh:
-```
-Max-Heap:       [90, 75, 85, 55, 45, 60, 20]
-                  0   1   2   3   4   5   6
+ - Representasi Pohon
+![[Pasted image 20260525121523.png]]
 
-Representasi pohon:
-         90
-        /  \
-      75    85
-     / \   / \
-   55  45 60  20
-```
+- Representasi Array
+![[Pasted image 20260525121557.png]]
 
 #### Algoritma Operasi Binary Heap
 
@@ -116,8 +102,10 @@ Representasi pohon:
    - Ulangi hingga posisi benar atau mencapai root.
 Kompleksitas: O(log n)
 ```
+![[Pasted image 20260525124251.png|516]] ![[Pasted image 20260525124316.png|164]]
 
 **2. Extract Min/Max (Heappop / Percolate Down)**
+
 ```
 1. Simpan nilai root (min atau max).
 2. Ganti root dengan elemen terakhir.
@@ -128,6 +116,12 @@ Kompleksitas: O(log n)
    - Ulangi hingga posisi benar.
 Kompleksitas: O(log n)
 ```
+- Sebagai contoh kita menggunakan proses extract min
+![[Pasted image 20260525124507.png]]
+![[Pasted image 20260525124641.png]]
+![[Pasted image 20260525124718.png]]
+![[Pasted image 20260525124737.png|697]]
+![[Pasted image 20260525124827.png]]
 
 **3. Build Heap (Heapify)**
 ```
@@ -169,27 +163,8 @@ Properti **B_k**:
 - Root memiliki tepat **k anak**.
 - Jumlah node di kedalaman d = C(k, d), yaitu koefisien binomial, yang menjadi asal nama "Binomial".
 
-```
-B_0:  •        (1 node)
-
-B_1:  •         (2 node)
-      |
-      •
-
-B_2:  •          (4 node)
-     /|
-    •  •
-    |
-    •
-
-B_3:  •           (8 node)
-    / | \
-   •  •  •
-  /|  |
- • •  •
- |
- •
-```
+![[Pasted image 20260525125159.png]]
+![[Pasted image 20260525125223.png]]
 
 Distribusi jumlah node pada setiap level mengikuti pola **segitiga Pascal**, dan itulah mengapa struktur ini disebut Binomial Tree.
 
@@ -203,6 +178,9 @@ Binomial Heap adalah **koleksi (hutan) dari Binomial Trees** di mana:
 Representasi biner ini menjadi dasar efisiensi operasi merge pada Binomial Heap. Apabila sebuah Binomial Heap dihuni 9 simpul, representasi binernya adalah `1001₂`. Ini berarti terdapat satu pohon berderajat 3 (karena 2³ = 8) dan satu pohon berderajat 0 (karena 2⁰ = 1).
 
 Contoh: Binomial Heap dengan 13 node (13 = 1101₂):
+
+![[Pasted image 20260525125327.png]]
+
 ```
 Terdiri dari: B_3 (8 node) + B_2 (4 node) + B_0 (1 node)
 ```
@@ -212,6 +190,14 @@ Ketika dua tree dengan degree sama muncul, keduanya akan digabung seperti proses
 #### Algoritma Operasi Binomial Heap
 
 **1. Union/Merge (operasi kunci!)**
+
+<!-- 
+  =========================================
+  PASTE HASIL GAMBAR DARI PROMPT 6 DI SINI
+  (Proses Merge Binomial Heap)
+  =========================================
+-->
+![Proses Merge Binomial Heap](#)
 ```
 1. Gabungkan root list dua heap, urutkan berdasarkan derajat.
 2. Sama seperti penjumlahan bilangan biner:
@@ -252,11 +238,13 @@ Kompleksitas: O(log n)
 
 ---
 
-## 3. Diagram / Visualisasi
+## 3. Lampiran: Diagram ASCII Tambahan
 
-> **Catatan:** Untuk visualisasi grafis beresolusi tinggi dari seluruh diagram di bawah ini, lihat file [`prompt.md`](./Assets/prompt.md) yang berisi prompt siap-pakai untuk Google Gemini.
+
 
 ### 3.1 Struktur Binary Heap (Min-Heap)
+
+
 
 ```
 Contoh Min-Heap dengan elemen: [3, 5, 8, 10, 9, 12, 15, 20]
@@ -304,6 +292,8 @@ Bukti relasi: Node indeks 1 (nilai=36):
 
 ### 3.3 Proses Insert pada Min-Heap
 
+
+
 ```
 Insert nilai 2 ke dalam heap [3, 5, 8, 10, 9, 12, 15, 20]:
 
@@ -338,6 +328,8 @@ Pohon akhir:
 
 ### 3.4 Proses Extract Min
 
+
+
 ```
 Extract Min dari [2, 3, 8, 5, 9, 12, 15, 20, 10]:
 
@@ -361,6 +353,8 @@ Hasil: dikembalikan nilai 2, heap sekarang valid.
 ```
 
 ### 3.5 Pembentukan Binomial Tree (B_0 hingga B_3)
+
+
 
 ```
 Ordo 0 (B_0): Hanya 1 Simpul
@@ -390,6 +384,8 @@ o
 
 ### 3.6 Struktur Binomial Heap (13 node)
 
+
+
 ```
 13 = 1101₂  →  B_3 + B_2 + B_0
 
@@ -409,6 +405,8 @@ Heap property: setiap parent ≤ children-nya ✓
 ```
 
 ### 3.7 Proses Merge Binomial Heap
+
+
 
 ```
 Merge Heap A (7 node = 111₂) + Heap B (3 node = 011₂)
@@ -549,6 +547,14 @@ Binary Heap dirancang sebagai satu pohon tunggal yang bentuknya selalu terjaga (
 Binomial Heap mengambil pendekatan yang berbeda. Data dipecah ke dalam beberapa pohon (*forest*) yang masing-masing berderajat berbeda, dan komposisi pohon-pohon ini berubah seiring operasi yang dilakukan.
 
 ### 7.1 Tabel Perbandingan Operasi
+
+<!-- 
+  =========================================
+  PASTE HASIL GAMBAR DARI PROMPT 7 DI SINI
+  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
+  =========================================
+-->
+![Perbandingan Tabel Kompleksitas](#)
 
 | Operasi | Binary Heap | Binomial Heap |
 |:---|:---:|:---:|
@@ -711,6 +717,14 @@ Merge                O(n)           O(log n)  ← kunci perbedaan
 Pengembangan struktur data heap tidak berhenti di Binary Heap atau Binomial Heap. Penelitian terus berlangsung untuk mendorong batas performa lebih jauh.
 
 ### 9.1 Garis Waktu Evolusi Struktur Heap
+
+<!-- 
+  =========================================
+  PASTE HASIL GAMBAR DARI PROMPT 9 DI SINI
+  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
+  =========================================
+-->
+![Garis Waktu Evolusi Heap](#)
 
 ```
 Binary Heap (1964, Williams)
@@ -1249,6 +1263,14 @@ Dalam kesimpulan uji lapangan, Binomial Heap didiagnosa tertinggal jauh di belak
 
 ### 11.2 Pembedahan Cache Profiling Mikroprosesor
 
+<!-- 
+  =========================================
+  PASTE HASIL GAMBAR DARI PROMPT 8 DI SINI
+  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
+  =========================================
+-->
+![Diagram Cache Performance Comparison](#)
+
 Lantas, fenomena fisik apa yang menenggelamkan hegemoni teori logaritmik Binomial Heap? Analisis **memory cache profiling** menggunakan detektor seperti *cachegrind* memaparkan bahwa biang keladi kelemahan struktural adalah **pelacakan referensi silang tak beratur (*Irregular Memory Access Patterns*)**.
 
 Binomial Heap berbasis pointer, sehingga ketika melakukan merge atau rekonstruksi sibling, prosesor harus membaca lokasi memori yang tersebar. Kondisi ini mengakibatkan **kegagalan lokalitas (*poor spatial locality*)** yang memicu cache miss kronis pada setiap operasi pemindahan pohon.
@@ -1407,6 +1429,14 @@ public class HeapBenchmark {
 ```
 
 ### 11.4 Hasil Benchmark (Estimasi, Java 17, Intel i5)
+
+<!-- 
+  =========================================
+  PASTE HASIL GAMBAR DARI PROMPT 10 DI SINI
+  Ganti link "#" dengan URL gambar dari https://gemini.google.com/share/a76419689664
+  =========================================
+-->
+![Diagram Hasil Benchmark (Bar Chart)](#)
 
 ```
 ╔══════════════════════════════════════════════════════╗
